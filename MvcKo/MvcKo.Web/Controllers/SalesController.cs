@@ -2,8 +2,10 @@
 using MvcKo.Model;
 using MvcKo.Web.ViewModels;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web.Mvc;
 
 namespace MvcKo.Web.Controllers
@@ -47,7 +49,8 @@ namespace MvcKo.Web.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            var salesOrderViewModel = new SalesOrderViewModel();
+            return View(salesOrderViewModel);
         }
 
         [HttpPost]
@@ -113,6 +116,43 @@ namespace MvcKo.Web.Controllers
             _db.SalesOrders.Remove(salesOrder);
             _db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public JsonResult Save(SalesOrderViewModel salesVM)
+        {
+            try
+            {
+                SalesOrder sales =
+                    new SalesOrder
+                    {
+                        CustomerName = salesVM.CustomerName,
+                        PoNumber = salesVM.PoNumber
+                    };
+
+                _db.SalesOrders.Add(sales);
+                _db.SaveChanges();
+
+                salesVM.MessageToClient = string.Format("{0}'s orders have been added.", salesVM.CustomerName);
+            }
+            catch (DbEntityValidationException ex)
+            {
+
+                StringBuilder sb = new StringBuilder();
+
+                foreach (var failure in ex.EntityValidationErrors)
+                {
+                    sb.AppendFormat("{0} failed validation\n", failure.Entry.Entity.GetType());
+                    foreach (var error in failure.ValidationErrors)
+                    {
+                        sb.AppendFormat("- {0} : {1}", error.PropertyName, error.ErrorMessage);
+                        sb.AppendLine();
+                    }
+                }
+                salesVM.MessageToClient = string.Format("the saving failed with the following errors: {0}", sb.ToString());
+            }
+            return Json(new { salesVM }, JsonRequestBehavior.AllowGet);
         }
         #endregion
 
