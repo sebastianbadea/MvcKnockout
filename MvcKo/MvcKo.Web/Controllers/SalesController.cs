@@ -48,8 +48,9 @@ namespace MvcKo.Web.Controllers
 
         public ActionResult Create()
         {
-            var salesOrderViewModel = new SalesOrderViewModel { State = ObjectState.Added};
-            return View(salesOrderViewModel);
+            var salesOrderViewModel = new SalesOrderViewModel { State = ObjectState.Added };
+            ViewBag.Title = "Create a new order";
+            return View("Operations",salesOrderViewModel);
         }
 
         public ActionResult Edit(int? id)
@@ -69,8 +70,8 @@ namespace MvcKo.Web.Controllers
                     salesOrder,
                     string.Format("The original value of the customer name is {0}.", salesOrder.CustomerName)
                 );
-
-            return View(salesOrderViewModel);
+            ViewBag.Title = "Edit the order";
+            return View("Operations", salesOrderViewModel);
         }
 
         public ActionResult Delete(int? id)
@@ -110,15 +111,7 @@ namespace MvcKo.Web.Controllers
                 _db.SaveChanges();
 
                 salesVM.SalesOrderId = sales.SalesOrderId;
-                switch (salesVM.State)
-                {
-                    case ObjectState.Added:
-                        salesVM.MessageToClient = string.Format("{0}'s orders have been added.", salesVM.CustomerName);
-                        break;
-                    case ObjectState.Modified:
-                        salesVM.MessageToClient = string.Format("{0}'s orders have been modified.", salesVM.CustomerName);
-                        break;
-                }
+                salesVM.MessageToClient = MessageToClient(salesVM);
                 salesVM.State = ObjectState.Unchanged;
             }
             catch (DbEntityValidationException ex)
@@ -180,6 +173,22 @@ namespace MvcKo.Web.Controllers
                 }
             }
             return sb.ToString();
+        }
+
+        private string MessageToClient(SalesOrderViewModel salesVM)
+        {
+            var message = string.Empty;
+            switch (salesVM.State)
+            {
+                case ObjectState.Added:
+                    message = string.Format("{0}'s orders have been added.", salesVM.CustomerName);
+                    break;
+                case ObjectState.Modified:
+                    message = string.Format("{0}'s orders have been modified.", salesVM.CustomerName);
+                    break;
+            }
+
+            return message;
         }
         #endregion
     }
