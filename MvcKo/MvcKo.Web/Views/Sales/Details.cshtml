@@ -1,35 +1,32 @@
 ﻿@model MvcKo.Web.ViewModels.SalesOrderViewModel
+@using System.Web.Script.Serialization
 
+    @{
+        ViewBag.Title = "Sales order details";
+    }
 @{
-    ViewBag.Title = "Details";
+    var data = new JavaScriptSerializer().Serialize(Model);
 }
+    @section scripts{
+        @Scripts.Render("~/bundles/knockoutSales")
+        <script type="text/javascript">
+            var salesOrderViewModel = new SalesOrderViewModel(@Html.Raw(data));
+            ko.applyBindings(salesOrderViewModel);
+        </script>
+    }
+    <h2>@ViewBag.Title</h2>
+    <p data-bind="text: MessageToClient"></p>
 
-<h2>Details</h2>
-@Html.DisplayFor(model => model.MessageToClient)
-
-<div>
-    <h4>SalesOrder</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CustomerName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PoNumber)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PoNumber)
-        </dd>
-
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.SalesOrderId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+    <div>
+        <div>
+            <label>Customer name:</label>
+            <span data-bind="text: CustomerName"></span>
+        </div>
+        <div>
+            <label>PO number:</label>
+            <span data-bind="text: PoNumber"></span>
+        </div>
+    </div>
+    <p>
+        @Html.ActionLink("Back to List", "Index")
+    </p>
