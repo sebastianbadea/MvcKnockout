@@ -1,7 +1,7 @@
 ﻿
 namespace MvcKo.Model
 {
-    public class SalesOrder
+    public class SalesOrder: Entity
     {
         public int SalesOrderId { get; set; }
         public string CustomerName { get; set; }

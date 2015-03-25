@@ -1,4 +1,10 @@
-﻿SalesOrderViewModel = function (data) {
+﻿var State = {
+    Unchanged: 0,
+    Added: 1, 
+    Modified: 2, 
+    Deleted: 3
+};
+SalesOrderViewModel = function (data) {
     var self = this;
     ko.mapping.fromJS(data, {}, self);
     self.save = function () {
@@ -24,8 +30,13 @@
             }
         });
     };
-    self.setParameters = function (opt) {
-        
+    self.flafAsEdited = function () {
+        if (self.State() != State.Added) {
+            self.State(State.Modified);
+        }
+        return true;
+    },
+    self.setParameters = function (opt) {        
         for (var i = 0; i < opt.toBeAdded.length; i++) {
             opt.params[opt.toBeAdded[i].key] = opt.toBeAdded[i].value;
         }

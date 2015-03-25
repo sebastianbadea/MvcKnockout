@@ -43,28 +43,13 @@ namespace MvcKo.Web.Controllers
 
             var salesOrderViewModel = SetViewModel(salesOrder);
 
-
             return View(salesOrderViewModel);
         }
 
         public ActionResult Create()
         {
-            var salesOrderViewModel = new SalesOrderViewModel();
+            var salesOrderViewModel = new SalesOrderViewModel { State = ObjectState.Added};
             return View(salesOrderViewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SalesOrderId,CustomerName,PoNumber")] SalesOrder salesOrder)
-        {
-            if (ModelState.IsValid)
-            {
-                _db.SalesOrders.Add(salesOrder);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(salesOrder);
         }
 
         public ActionResult Edit(int? id)
@@ -78,20 +63,14 @@ namespace MvcKo.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(salesOrder);
-        }
+            var salesOrderViewModel = 
+                SetViewModel
+                (
+                    salesOrder,
+                    string.Format("The original value of the customer name is {0}.", salesOrder.CustomerName)
+                );
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SalesOrderId,CustomerName,PoNumber")] SalesOrder salesOrder)
-        {
-            if (ModelState.IsValid)
-            {
-                _db.Entry(salesOrder).State = EntityState.Modified;
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(salesOrder);
+            return View(salesOrderViewModel);
         }
 
         public ActionResult Delete(int? id)
@@ -124,33 +103,28 @@ namespace MvcKo.Web.Controllers
         {
             try
             {
-                SalesOrder sales =
-                    new SalesOrder
-                    {
-                        CustomerName = salesVM.CustomerName,
-                        PoNumber = salesVM.PoNumber
-                    };
+                var sales = SetModel(salesVM);
 
-                _db.SalesOrders.Add(sales);
+                _db.SalesOrders.Attach(sales);
+                _db.ApplyStateChanges();
                 _db.SaveChanges();
 
-                salesVM.MessageToClient = string.Format("{0}'s orders have been added.", salesVM.CustomerName);
+                salesVM.SalesOrderId = sales.SalesOrderId;
+                switch (salesVM.State)
+                {
+                    case ObjectState.Added:
+                        salesVM.MessageToClient = string.Format("{0}'s orders have been added.", salesVM.CustomerName);
+                        break;
+                    case ObjectState.Modified:
+                        salesVM.MessageToClient = string.Format("{0}'s orders have been modified.", salesVM.CustomerName);
+                        break;
+                }
+                salesVM.State = ObjectState.Unchanged;
             }
             catch (DbEntityValidationException ex)
             {
-
-                StringBuilder sb = new StringBuilder();
-
-                foreach (var failure in ex.EntityValidationErrors)
-                {
-                    sb.AppendFormat("{0} failed validation\n", failure.Entry.Entity.GetType());
-                    foreach (var error in failure.ValidationErrors)
-                    {
-                        sb.AppendFormat("- {0} : {1}", error.PropertyName, error.ErrorMessage);
-                        sb.AppendLine();
-                    }
-                }
-                salesVM.MessageToClient = string.Format("the saving failed with the following errors: {0}", sb.ToString());
+                var errors = ExtractErrors(ex);
+                salesVM.MessageToClient = string.Format("the saving failed with the following errors: {0}", errors);
             }
             return Json(new { salesVM }, JsonRequestBehavior.AllowGet);
         }
@@ -168,7 +142,19 @@ namespace MvcKo.Web.Controllers
         #endregion
 
         #region private methods
-        private SalesOrderViewModel SetViewModel(SalesOrder salesOrder)
+        private static SalesOrder SetModel(SalesOrderViewModel salesVM)
+        {
+            return
+                new SalesOrder
+                {
+                    CustomerName = salesVM.CustomerName,
+                    PoNumber = salesVM.PoNumber,
+                    State = salesVM.State,
+                    SalesOrderId = salesVM.SalesOrderId
+                };
+        }
+
+        private SalesOrderViewModel SetViewModel(SalesOrder salesOrder, string messageToClient = "create view for the viewmodel")
         {
             return 
                 new SalesOrderViewModel
@@ -176,8 +162,24 @@ namespace MvcKo.Web.Controllers
                     SalesOrderId = salesOrder.SalesOrderId,
                     CustomerName = salesOrder.CustomerName,
                     PoNumber = salesOrder.PoNumber,
-                    MessageToClient = "view for the viewmodel"
+                    MessageToClient = messageToClient
                 };
+        }
+
+        private string ExtractErrors(DbEntityValidationException ex)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var failure in ex.EntityValidationErrors)
+            {
+                sb.AppendFormat("{0} failed validation\n", failure.Entry.Entity.GetType());
+                foreach (var error in failure.ValidationErrors)
+                {
+                    sb.AppendFormat("- {0} : {1}", error.PropertyName, error.ErrorMessage);
+                    sb.AppendLine();
+                }
+            }
+            return sb.ToString();
         }
         #endregion
     }

@@ -2,7 +2,7 @@
 @using System.Web.Script.Serialization
 
 @{
-    ViewBag.Title = "Create new sales order";
+    ViewBag.Title = "Create new order";
 }
 @{
     var data = new JavaScriptSerializer().Serialize(Model);
@@ -21,11 +21,11 @@
 <div>
     <div>
         <label>Customer name:</label>
-        <input data-bind="value: CustomerName" />
+        <input data-bind="value: CustomerName, event: {change: flafAsEdited}" />
     </div>
     <div>
         <label>PO number:</label>
-        <input data-bind="value: PoNumber" />
+        <input data-bind="value: PoNumber, event: {change: flafAsEdited}" />
     </div>
 </div>
 

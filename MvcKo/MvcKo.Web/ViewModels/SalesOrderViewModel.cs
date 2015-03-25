@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
+﻿
 namespace MvcKo.Web.ViewModels
 {
-    public class SalesOrderViewModel
+    public class SalesOrderViewModel: ViewModel
     {
         public int SalesOrderId { get; set; }
         public string CustomerName { get; set; }
