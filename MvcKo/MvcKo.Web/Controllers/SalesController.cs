@@ -85,17 +85,12 @@ namespace MvcKo.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(salesOrder);
-        }
+            var salesOrderViewModel = SetViewModel(salesOrder);
+            salesOrderViewModel.State = ObjectState.Deleted;
+            
+            ViewBag.Title = "Delete sales order";
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            SalesOrder salesOrder = _db.SalesOrders.Find(id);
-            _db.SalesOrders.Remove(salesOrder);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
+            return View(salesOrderViewModel);
         }
 
         [HttpPost]
@@ -109,6 +104,11 @@ namespace MvcKo.Web.Controllers
                 _db.SalesOrders.Attach(sales);
                 _db.ApplyStateChanges();
                 _db.SaveChanges();
+
+                if (salesVM.State == ObjectState.Deleted)
+                {
+                    return Json(new { ReturnUrl = Url.Action("Index")}, JsonRequestBehavior.AllowGet);
+                }
 
                 salesVM.SalesOrderId = sales.SalesOrderId;
                 salesVM.MessageToClient = MessageToClient(salesVM);

@@ -1,40 +1,33 @@
-﻿@model MvcKo.Model.SalesOrder
+﻿@model MvcKo.Web.ViewModels.SalesOrderViewModel
+@using System.Web.Script.Serialization
 
 @{
-    ViewBag.Title = "Delete";
+    var data = new JavaScriptSerializer().Serialize(Model);
 }
-
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
+@section scripts{
+    @Scripts.Render("~/bundles/knockoutSales")
+    <script type="text/javascript">
+        var salesOrderViewModel = new SalesOrderViewModel(@Html.Raw(data));
+        ko.applyBindings(salesOrderViewModel);
+    </script>
+}
+<h2>@ViewBag.Title</h2>
+<p data-bind="text: MessageToClient"></p>
+@Html.AntiForgeryToken()
 <div>
-    <h4>SalesOrder</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CustomerName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PoNumber)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PoNumber)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-    }
+    <div>
+        <label>Customer name:</label>
+        <span data-bind="text: CustomerName"></span>
+    </div>
+    <div>
+        <label>PO number:</label>
+        <span data-bind="text: PoNumber"></span>
+    </div>
 </div>
+
+<p><button data-bind="click: save">Delete</button></p>
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
+@Html.Hidden("urlSavePost", Url.Action("Save"))

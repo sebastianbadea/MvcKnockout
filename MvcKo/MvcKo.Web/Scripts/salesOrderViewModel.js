@@ -24,6 +24,9 @@ SalesOrderViewModel = function (data) {
             type: "POST",
             data: params,
             success: function (data) {
+                if (data.ReturnUrl != null) {
+                    window.location = data.ReturnUrl;
+                }
                 if (data.salesVM != null) {
                     ko.mapping.fromJS(data.salesVM, {}, self);
                 }
