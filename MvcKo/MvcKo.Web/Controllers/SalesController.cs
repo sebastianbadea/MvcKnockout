@@ -118,8 +118,8 @@ namespace MvcKo.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult Save(SalesOrderViewModel salesVM)
         {
             try
