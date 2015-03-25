@@ -7,7 +7,7 @@ namespace MvcKo.DataLayer
     {
         public SalesContext(): base("DefaultConnection") { }
 
-        public DbSet<SalesOrder> SalesOrders { get; set; }
+        public IDbSet<SalesOrder> SalesOrders { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
