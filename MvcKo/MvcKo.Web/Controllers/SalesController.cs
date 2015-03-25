@@ -1,5 +1,6 @@
 ﻿using MvcKo.DataLayer;
 using MvcKo.Model;
+using MvcKo.Web.ViewModels;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -37,7 +38,11 @@ namespace MvcKo.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(salesOrder);
+
+            var salesOrderViewModel = SetViewModel(salesOrder);
+
+
+            return View(salesOrderViewModel);
         }
 
         public ActionResult Create()
@@ -119,6 +124,20 @@ namespace MvcKo.Web.Controllers
                 _db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        #endregion
+
+        #region private methods
+        private SalesOrderViewModel SetViewModel(SalesOrder salesOrder)
+        {
+            return 
+                new SalesOrderViewModel
+                {
+                    SalesOrderId = salesOrder.SalesOrderId,
+                    CustomerName = salesOrder.CustomerName,
+                    PoNumber = salesOrder.PoNumber,
+                    MessageToClient = "view for the viewmodel"
+                };
         }
         #endregion
     }

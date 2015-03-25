@@ -1,10 +1,11 @@
-﻿@model MvcKo.Model.SalesOrder
+﻿@model MvcKo.Web.ViewModels.SalesOrderViewModel
 
 @{
     ViewBag.Title = "Details";
 }
 
 <h2>Details</h2>
+@Html.DisplayFor(model => model.MessageToClient)
 
 <div>
     <h4>SalesOrder</h4>
