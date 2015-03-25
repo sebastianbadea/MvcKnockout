@@ -181,7 +181,6 @@
     <Content Include="Views\Sales\Operations.cshtml" />
     <Content Include="Views\Sales\Delete.cshtml" />
     <Content Include="Views\Sales\Details.cshtml" />
-    <Content Include="Views\Sales\Edit.cshtml" />
     <Content Include="Views\Sales\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
