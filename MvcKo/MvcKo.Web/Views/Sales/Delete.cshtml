@@ -11,23 +11,8 @@
         ko.applyBindings(salesOrderViewModel);
     </script>
 }
-<h2>@ViewBag.Title</h2>
-<p data-bind="text: MessageToClient"></p>
 @Html.AntiForgeryToken()
-<div>
-    <div>
-        <label>Customer name:</label>
-        <span data-bind="text: CustomerName"></span>
-    </div>
-    <div>
-        <label>PO number:</label>
-        <span data-bind="text: PoNumber"></span>
-    </div>
-</div>
+
+@Html.Partial("Display")
 
 <p><button data-bind="click: save">Delete</button></p>
-
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>
-@Html.Hidden("urlSavePost", Url.Action("Save"))

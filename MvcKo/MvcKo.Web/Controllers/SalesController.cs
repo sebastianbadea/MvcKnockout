@@ -41,7 +41,8 @@ namespace MvcKo.Web.Controllers
                 return HttpNotFound();
             }
 
-            var salesOrderViewModel = SetViewModel(salesOrder);
+            var salesOrderViewModel = Helpers.SetViewModel(salesOrder);
+            ViewBag.Title = "Sales order details";
 
             return View(salesOrderViewModel);
         }
@@ -64,8 +65,8 @@ namespace MvcKo.Web.Controllers
             {
                 return HttpNotFound();
             }
-            var salesOrderViewModel = 
-                SetViewModel
+            var salesOrderViewModel =
+                Helpers.SetViewModel
                 (
                     salesOrder,
                     string.Format("The original value of the customer name is {0}.", salesOrder.CustomerName)
@@ -85,7 +86,7 @@ namespace MvcKo.Web.Controllers
             {
                 return HttpNotFound();
             }
-            var salesOrderViewModel = SetViewModel(salesOrder);
+            var salesOrderViewModel = Helpers.SetViewModel(salesOrder);
             salesOrderViewModel.State = ObjectState.Deleted;
             
             ViewBag.Title = "Delete sales order";
@@ -99,7 +100,7 @@ namespace MvcKo.Web.Controllers
         {
             try
             {
-                var sales = SetModel(salesVM);
+                var sales = Helpers.SetModel(salesVM);
 
                 _db.SalesOrders.Attach(sales);
                 _db.ApplyStateChanges();
@@ -111,12 +112,12 @@ namespace MvcKo.Web.Controllers
                 }
 
                 salesVM.SalesOrderId = sales.SalesOrderId;
-                salesVM.MessageToClient = MessageToClient(salesVM);
+                salesVM.MessageToClient = Helpers.MessageToClient(salesVM);
                 salesVM.State = ObjectState.Unchanged;
             }
             catch (DbEntityValidationException ex)
             {
-                var errors = ExtractErrors(ex);
+                var errors = Helpers.ExtractErrors(ex);
                 salesVM.MessageToClient = string.Format("the saving failed with the following errors: {0}", errors);
             }
             return Json(new { salesVM }, JsonRequestBehavior.AllowGet);
@@ -135,61 +136,7 @@ namespace MvcKo.Web.Controllers
         #endregion
 
         #region private methods
-        private static SalesOrder SetModel(SalesOrderViewModel salesVM)
-        {
-            return
-                new SalesOrder
-                {
-                    CustomerName = salesVM.CustomerName,
-                    PoNumber = salesVM.PoNumber,
-                    State = salesVM.State,
-                    SalesOrderId = salesVM.SalesOrderId
-                };
-        }
-
-        private SalesOrderViewModel SetViewModel(SalesOrder salesOrder, string messageToClient = "create view for the viewmodel")
-        {
-            return 
-                new SalesOrderViewModel
-                {
-                    SalesOrderId = salesOrder.SalesOrderId,
-                    CustomerName = salesOrder.CustomerName,
-                    PoNumber = salesOrder.PoNumber,
-                    MessageToClient = messageToClient
-                };
-        }
-
-        private string ExtractErrors(DbEntityValidationException ex)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (var failure in ex.EntityValidationErrors)
-            {
-                sb.AppendFormat("{0} failed validation\n", failure.Entry.Entity.GetType());
-                foreach (var error in failure.ValidationErrors)
-                {
-                    sb.AppendFormat("- {0} : {1}", error.PropertyName, error.ErrorMessage);
-                    sb.AppendLine();
-                }
-            }
-            return sb.ToString();
-        }
-
-        private string MessageToClient(SalesOrderViewModel salesVM)
-        {
-            var message = string.Empty;
-            switch (salesVM.State)
-            {
-                case ObjectState.Added:
-                    message = string.Format("{0}'s orders have been added.", salesVM.CustomerName);
-                    break;
-                case ObjectState.Modified:
-                    message = string.Format("{0}'s orders have been modified.", salesVM.CustomerName);
-                    break;
-            }
-
-            return message;
-        }
+        
         #endregion
     }
 }
