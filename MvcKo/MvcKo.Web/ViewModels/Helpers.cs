@@ -18,9 +18,12 @@ namespace MvcKo.Web.ViewModels
                     SalesOrderId = orderVM.SalesOrderId
                 };
 
+            var salesOrderItemId = -1;
+
             foreach (var itemVm in orderVM.SalesOrderItems)
             {
-                var item = SetOrderItemModel(itemVm);
+                int id = SetOrderItemId(ref salesOrderItemId, itemVm);
+                var item = SetOrderItemModel(itemVm, id);
                 order.SalesOrderItems.Add(item);
             }
 
@@ -64,7 +67,7 @@ namespace MvcKo.Web.ViewModels
             return itemVm;
         }
 
-        private static SalesOrderItem SetOrderItemModel(SalesOrderItemViewModel itemVm)
+        private static SalesOrderItem SetOrderItemModel(SalesOrderItemViewModel itemVm, int id)
         {
             var item =
                 new SalesOrderItem
@@ -73,10 +76,24 @@ namespace MvcKo.Web.ViewModels
                     Quantity = itemVm.Quantity,
                     UnitPrice = itemVm.UnitPrice,
                     State = itemVm.State,
-                    SalesOrderItemId = itemVm.SalesOrderItemId,
+                    SalesOrderItemId = id,
                     SalesOrderId = itemVm.SalesOrderId
                 };
             return item;
+        }
+
+        private static int SetOrderItemId(ref int salesOrderItemId, SalesOrderItemViewModel itemVm)
+        {
+            int id;
+            if (itemVm.State == ObjectState.Added)
+            {
+                id = salesOrderItemId--;
+            }
+            else
+            {
+                id = itemVm.SalesOrderItemId;
+            }
+            return id;
         }
         #endregion
 
@@ -105,6 +122,10 @@ namespace MvcKo.Web.ViewModels
                     message = string.Format("{0}'s orders have been added.", salesVM.CustomerName);
                     break;
                 case ObjectState.Modified:
+                    message = string.Format("{0}'s orders have been modified.", salesVM.CustomerName);
+                    break;
+                    //it means that the children collection was modified
+                case ObjectState.Unchanged:
                     message = string.Format("{0}'s orders have been modified.", salesVM.CustomerName);
                     break;
             }

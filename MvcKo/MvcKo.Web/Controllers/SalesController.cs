@@ -111,8 +111,9 @@ namespace MvcKo.Web.Controllers
                     return Json(new { ReturnUrl = Url.Action("Index")}, JsonRequestBehavior.AllowGet);
                 }
 
-                salesVM.SalesOrderId = sales.SalesOrderId;
-                salesVM.MessageToClient = Helpers.MessageToClient(salesVM);
+                string messageToClient = Helpers.MessageToClient(salesVM);
+                salesVM = Helpers.SetOrderViewModel(sales);
+                salesVM.MessageToClient = messageToClient;
                 salesVM.State = ObjectState.Unchanged;
             }
             catch (DbEntityValidationException ex)

@@ -28,6 +28,7 @@ SalesOrderViewModel = function (data) {
     self.save = function () {
         var jsParams = ko.toJS(self);
         var securityToken = $('[name=__RequestVerificationToken]').val();
+        //here you can add/remove parameters from the observable
         var params =
             this.setParameters
             ({
@@ -35,7 +36,7 @@ SalesOrderViewModel = function (data) {
                 toBeAdded: 
                     [{key: "__RequestVerificationToken",
                       value: encodeURIComponent(securityToken)}],
-                toBeRemoved: ["save", "setParameters"]
+                toBeRemoved: ["save", "setParameters", "addItem", "flafAsEdited", "__ko_mapping__"]
             });
         $.ajax({
             url: $("#urlSavePost").val(),
@@ -51,6 +52,22 @@ SalesOrderViewModel = function (data) {
             }
         });
     };
+    self.addItem = function () {
+        var salesOrderItem =
+            new salesOrderItemViewModel
+            (
+                {
+                    SalesOrderId: self.SalesOrderId(),
+                    SalesOrderItemId: 0,
+                    ProductCode: "",
+                    Quantity: "1",
+                    UnitPrice: 0,
+                    State: State.Added
+                });
+        self.SalesOrderItems.push(salesOrderItem);
+    }
+
+    //#region private functions
     self.flafAsEdited = function () {
         if (self.State() != State.Added) {
             self.State(State.Modified);
@@ -68,4 +85,5 @@ SalesOrderViewModel = function (data) {
 
         return opt.params;
     }
+    //#endregion
 }

@@ -24,12 +24,10 @@
         <label for="PoNumber" class="control-label">PO number:</label>
         <input id="PoNumber" class="form-control" data-bind="value: PoNumber, event: {change: flafAsEdited}" />
     </div>
-    <p><button class="btn btn-primary" data-bind="click: save">Save</button></p>
-
     @Html.Partial("OpOrderItems")
-
+    <p><button class="btn btn-primary" data-bind="click: save">Save</button></p>
     <p>
-        @Html.ActionLink("Back to List", "Index", new { }, new { @class="btn btn-default btn-sm" })
+        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-default btn-sm" })
     </p>
 </div>
 
