@@ -1,6 +1,7 @@
 ﻿using MvcKo.DataLayer;
 using MvcKo.Model;
 using MvcKo.Web.ViewModels;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -104,7 +105,14 @@ namespace MvcKo.Web.Controllers
 
                 _db.SalesOrders.Attach(sales);
 
-                DeleteItems(salesVM);
+                if (salesVM.State == ObjectState.Deleted)
+                {
+                    DeleteItemsForDeletedOrder(salesVM.SalesOrderItems);
+                }
+                else
+                {
+                    DeleteItemsForSavedOrder(salesVM);
+                }
 
                 _db.ApplyStateChanges();
                 _db.SaveChanges();
@@ -143,9 +151,22 @@ namespace MvcKo.Web.Controllers
 
         #region private methods
         /// <summary>
+        /// This method set the state of the items of the order as deleted. 
+        /// Is called when an order is deleted.
+        /// </summary>
+        /// <param name="salesVM"></param>
+        private void DeleteItemsForDeletedOrder(List<SalesOrderItemViewModel> items)
+        {
+            foreach (var itemToDelete in items)
+            {
+                var item = _db.SalesOrderItems.Find(itemToDelete.SalesOrderItemId);
+                item.State = ObjectState.Deleted;
+            }
+        }
+        /// <summary>
         /// This method takes the id's set on the client and for each set state to deleted
         /// </summary>
-        private void DeleteItems(SalesOrderViewModel salesVM)
+        private void DeleteItemsForSavedOrder(SalesOrderViewModel salesVM)
         {
             foreach (var itemToDelete in salesVM.SalesOrderItemsToDelete)
             {
