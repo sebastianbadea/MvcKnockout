@@ -1,16 +1,13 @@
-﻿<h2>@ViewBag.Title</h2>
-<p data-bind="text: MessageToClient"></p>
-<div>
-    <div>
-        <label>Customer name:</label>
-        <span data-bind="text: CustomerName"></span>
+﻿<div class="col-md-6 col-md-offset-3">
+    <h2>@ViewBag.Title</h2>
+    <p data-bind="text: MessageToClient"></p>
+    <div class="form-group">
+        <label class="control-label">Customer name:</label>
+        <span class="form-control" data-bind="text: CustomerName"></span>
     </div>
-    <div>
-        <label>PO number:</label>
-        <span data-bind="text: PoNumber"></span>
+    <div class="form-group">
+        <label class="control-label">PO number:</label>
+        <span class="form-control" data-bind="text: PoNumber"></span>
     </div>
 </div>
 @Html.Hidden("urlSavePost", Url.Action("Save"))
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>

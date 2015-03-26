@@ -12,23 +12,22 @@
     </script>
 }
 @Html.AntiForgeryToken()
-<h2>@ViewBag.Title</h2>
-<p data-bind="text: MessageToClient"></p>
 
-<div>
-    <div>
-        <label>Customer name:</label>
-        <input data-bind="value: CustomerName, event: {change: flafAsEdited}" />
+<div class="col-md-6 col-md-offset-3">
+    <h3>@ViewBag.Title</h3>
+    <p data-bind="text: MessageToClient"></p>
+    <div class="form-group">
+        <label for="CustomerName" class="control-label">Customer name:</label>
+        <input id="CustomerName" class="form-control" data-bind="value: CustomerName, event: {change: flafAsEdited}" />
     </div>
-    <div>
-        <label>PO number:</label>
-        <input data-bind="value: PoNumber, event: {change: flafAsEdited}" />
+    <div class="form-group">
+        <label for="PoNumber" class="control-label">PO number:</label>
+        <input id="PoNumber" class="form-control" data-bind="value: PoNumber, event: {change: flafAsEdited}" />
     </div>
+    <p><button class="btn btn-primary" data-bind="click: save">Save</button></p>
+    <p>
+        @Html.ActionLink("Back to List", "Index", new { }, new { @class="btn btn-default btn-sm" })
+    </p>
 </div>
 
-<button data-bind="click: save">Save</button>
-
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>
 @Html.Hidden("urlSavePost", Url.Action("Save"))
