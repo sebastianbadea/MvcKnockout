@@ -1,7 +1,7 @@
 ﻿var State = {
     Unchanged: 0,
-    Added: 1, 
-    Modified: 2, 
+    Added: 1,
+    Modified: 2,
     Deleted: 3
 };
 
@@ -20,6 +20,15 @@ salesOrderItemMapping = {
 salesOrderItemViewModel = function (data) {
     var self = this;
     ko.mapping.fromJS(data, {}, self);
+    self.flafAsEdited = function () {
+        if (self.State() != State.Added) {
+            self.State(State.Modified);
+        }
+        return true;
+    },
+    self.TotalPrice = ko.computed(function () {
+        return (self.Quantity() * self.UnitPrice()).toFixed(2);
+    });
 }
 
 SalesOrderViewModel = function (data) {
@@ -33,9 +42,11 @@ SalesOrderViewModel = function (data) {
             this.setParameters
             ({
                 params: jsParams,
-                toBeAdded: 
-                    [{key: "__RequestVerificationToken",
-                      value: encodeURIComponent(securityToken)}],
+                toBeAdded:
+                    [{
+                        key: "__RequestVerificationToken",
+                        value: encodeURIComponent(securityToken)
+                    }],
                 toBeRemoved: ["save", "setParameters", "addItem", "flafAsEdited", "__ko_mapping__"]
             });
         $.ajax({
@@ -65,16 +76,24 @@ SalesOrderViewModel = function (data) {
                     State: State.Added
                 });
         self.SalesOrderItems.push(salesOrderItem);
-    }
-
-    //#region private functions
+    };
     self.flafAsEdited = function () {
         if (self.State() != State.Added) {
             self.State(State.Modified);
         }
         return true;
-    },
-    self.setParameters = function (opt) {        
+    };
+    self.TotalPrice = ko.computed(function () {
+        var total = 0;
+        ko.utils.arrayForEach(self.SalesOrderItems(), function (saleOrderItem) {
+            total += parseFloat(saleOrderItem.TotalPrice());
+        });
+
+        return total.toFixed(2);
+    });
+
+    //#region private functions
+    self.setParameters = function (opt) {
         for (var i = 0; i < opt.toBeAdded.length; i++) {
             opt.params[opt.toBeAdded[i].key] = opt.toBeAdded[i].value;
         }
