@@ -5,7 +5,8 @@
     var data = new JavaScriptSerializer().Serialize(Model);
 }
 @section scripts{
-    @Scripts.Render("~/bundles/knockoutSales")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/sales")
     <script type="text/javascript">
         var salesOrderViewModel = new SalesOrderViewModel(@Html.Raw(data));
         ko.applyBindings(salesOrderViewModel);

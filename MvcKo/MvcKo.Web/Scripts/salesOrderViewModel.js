@@ -17,10 +17,12 @@ salesOrderItemMapping = {
     }
 };
 
-salesOrderItemViewModel = function (data) {
+
+var salesOrderItemViewModel = function (data) {
     var self = this;
     ko.mapping.fromJS(data, {}, self);
-    self.flafAsEdited = function () {
+
+    self.flagAsEdited = function () {
         if (self.State() != State.Added) {
             self.State(State.Modified);
         }
@@ -34,6 +36,7 @@ salesOrderItemViewModel = function (data) {
 SalesOrderViewModel = function (data) {
     var self = this;
     ko.mapping.fromJS(data, salesOrderItemMapping, self);
+
     self.save = function () {
         var jsParams = ko.toJS(self);
         var securityToken = $('[name=__RequestVerificationToken]').val();
@@ -47,7 +50,7 @@ SalesOrderViewModel = function (data) {
                         key: "__RequestVerificationToken",
                         value: encodeURIComponent(securityToken)
                     }],
-                toBeRemoved: ["save", "setParameters", "addItem", "flafAsEdited", "__ko_mapping__", "DeleteOrderItem"]
+                toBeRemoved: ["save", "setParameters", "addItem", "flagAsEdited", "__ko_mapping__", "DeleteOrderItem"]
             });
         $.ajax({
             url: $("#urlSavePost").val(),
@@ -62,7 +65,7 @@ SalesOrderViewModel = function (data) {
                 }
             }
         });
-    };
+    },
     self.addItem = function () {
         var salesOrderItem =
             new salesOrderItemViewModel
@@ -76,13 +79,13 @@ SalesOrderViewModel = function (data) {
                     State: State.Added
                 });
         self.SalesOrderItems.push(salesOrderItem);
-    };
-    self.flafAsEdited = function () {
+    },
+    self.flagAsEdited = function () {
         if (self.State() != State.Added) {
             self.State(State.Modified);
         }
         return true;
-    };
+    },
     self.TotalPrice = ko.computed(function () {
         var total = 0;
         ko.utils.arrayForEach(self.SalesOrderItems(), function (saleOrderItem) {
@@ -90,13 +93,13 @@ SalesOrderViewModel = function (data) {
         });
 
         return total.toFixed(2);
-    });
+    }),
     self.DeleteOrderItem = function (item) {
         self.SalesOrderItems.remove(item);
         if (item.SalesOrderItemId() > 0 && self.SalesOrderItemsToDelete().indexOf(item.SalesOrderItemId()) == -1) {
             self.SalesOrderItemsToDelete().push(item.SalesOrderItemId());
         }
-    };
+    },
 
     //#region private functions
     self.setParameters = function (opt) {

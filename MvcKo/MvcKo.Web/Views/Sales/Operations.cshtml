@@ -5,30 +5,34 @@
     var data = new JavaScriptSerializer().Serialize(Model);
 }
 @section scripts{
-    @Scripts.Render("~/bundles/knockoutSales")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/sales")
+    @Scripts.Render("~/bundles/salesValidation")
     <script type="text/javascript">
         var salesOrderViewModel = new SalesOrderViewModel(@Html.Raw(data));
         ko.applyBindings(salesOrderViewModel);
     </script>
 }
 @Html.AntiForgeryToken()
-
-<div class="col-md-6 col-md-offset-3">
-    <h3>@ViewBag.Title</h3>
-    <p data-bind="text: MessageToClient"></p>
-    <div class="form-group">
-        <label for="CustomerName" class="control-label">Customer name:</label>
-        <input id="CustomerName" class="form-control" data-bind="value: CustomerName, event: {change: flafAsEdited}" />
+<form>
+    <div class="col-md-6 col-md-offset-3">
+        <h3>@ViewBag.Title</h3>
+        <p data-bind="text: MessageToClient"></p>
+        <div class="form-group">
+            <label for="CustomerName" class="control-label">Customer name:</label>
+            <input id="CustomerName" name="CustomerName" class="form-control" data-bind="value: CustomerName, event: {change: flagAsEdited}" />
+        </div>
+        <div class="form-group">
+            <label for="PoNumber" class="control-label">PO number:</label>
+            <input id="PoNumber" name="PoNumber" class="form-control" data-bind="value: PoNumber, event: {change: flagAsEdited}" />
+        </div>
+        @Html.Partial("OpOrderItems")
+        <p><button type="submit" class="btn btn-primary">Save</button></p>
+        <p>
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-default btn-sm" })
+        </p>
     </div>
-    <div class="form-group">
-        <label for="PoNumber" class="control-label">PO number:</label>
-        <input id="PoNumber" class="form-control" data-bind="value: PoNumber, event: {change: flafAsEdited}" />
-    </div>
-    @Html.Partial("OpOrderItems")
-    <p><button class="btn btn-primary" data-bind="click: save">Save</button></p>
-    <p>
-        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-default btn-sm" })
-    </p>
-</div>
 
-@Html.Hidden("urlSavePost", Url.Action("Save"))
+    @Html.Hidden("urlSavePost", Url.Action("Save"))
+</form>
