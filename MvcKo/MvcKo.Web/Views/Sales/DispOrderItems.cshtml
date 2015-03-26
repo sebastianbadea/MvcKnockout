@@ -1,0 +1,17 @@
+﻿<table class="table table-striped" data-bind="visible: SalesOrderItems().length>0">
+    <thead>
+        <tr>
+            <th>Product code</th>
+            <th>Quantity</th>
+            <th>Unit price</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: SalesOrderItems">
+        <tr>
+            <td class="form-group"><span class="form-control input-sm" data-bind="text: ProductCode"></span></td>
+            <td class="form-group"><span class="form-control input-sm" data-bind="text: Quantity"></span></td>
+            <td class="form-group"><span class="form-control input-sm" data-bind="text: UnitPrice"></span></td>
+        </tr>
+    </tbody>
+</table>
+

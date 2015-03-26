@@ -1,38 +1,84 @@
 ﻿using MvcKo.Model;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity.Validation;
-using System.Linq;
 using System.Text;
-using System.Web;
 
 namespace MvcKo.Web.ViewModels
 {
     static class Helpers
     {
-        public static SalesOrder SetModel(SalesOrderViewModel salesVM)
+        #region order
+        public static SalesOrder SetOrderModel(SalesOrderViewModel orderVM)
         {
-            return
+            var order =
                 new SalesOrder
                 {
-                    CustomerName = salesVM.CustomerName,
-                    PoNumber = salesVM.PoNumber,
-                    State = salesVM.State,
-                    SalesOrderId = salesVM.SalesOrderId
+                    CustomerName = orderVM.CustomerName,
+                    PoNumber = orderVM.PoNumber,
+                    State = orderVM.State,
+                    SalesOrderId = orderVM.SalesOrderId
                 };
+
+            foreach (var itemVm in orderVM.SalesOrderItems)
+            {
+                var item = SetOrderItemModel(itemVm);
+                order.SalesOrderItems.Add(item);
+            }
+
+            return order;
         }
 
-        public static SalesOrderViewModel SetViewModel(SalesOrder salesOrder, string messageToClient = "create view for the viewmodel")
+        public static SalesOrderViewModel SetOrderViewModel(SalesOrder order, string messageToClient = "create view for the viewmodel")
         {
-            return
+            var orderVm =
                 new SalesOrderViewModel
                 {
-                    SalesOrderId = salesOrder.SalesOrderId,
-                    CustomerName = salesOrder.CustomerName,
-                    PoNumber = salesOrder.PoNumber,
+                    SalesOrderId = order.SalesOrderId,
+                    CustomerName = order.CustomerName,
+                    PoNumber = order.PoNumber,
                     MessageToClient = messageToClient
                 };
+
+            foreach (var item in order.SalesOrderItems)
+            {
+                var itemVm = SetOrderItemViewModel(item);
+                orderVm.SalesOrderItems.Add(itemVm);
+            }
+
+            return orderVm;
         }
+        #endregion
+
+        #region order item
+        private static SalesOrderItemViewModel SetOrderItemViewModel(SalesOrderItem item)
+        {
+            var itemVm =
+                new SalesOrderItemViewModel
+                {
+                    SalesOrderId = item.SalesOrderId,
+                    SalesOrderItemId = item.SalesOrderItemId,
+                    ProductCode = item.ProductCode,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitPrice,
+                    State = item.State
+                };
+            return itemVm;
+        }
+
+        private static SalesOrderItem SetOrderItemModel(SalesOrderItemViewModel itemVm)
+        {
+            var item =
+                new SalesOrderItem
+                {
+                    ProductCode = itemVm.ProductCode,
+                    Quantity = itemVm.Quantity,
+                    UnitPrice = itemVm.UnitPrice,
+                    State = itemVm.State,
+                    SalesOrderItemId = itemVm.SalesOrderItemId,
+                    SalesOrderId = itemVm.SalesOrderId
+                };
+            return item;
+        }
+        #endregion
 
         public static string ExtractErrors(DbEntityValidationException ex)
         {

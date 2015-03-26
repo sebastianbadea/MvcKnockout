@@ -4,9 +4,27 @@
     Modified: 2, 
     Deleted: 3
 };
-SalesOrderViewModel = function (data) {
+
+salesOrderItemMapping = {
+    //SalesOrderItems will be the name of the observable and will be used in the html template
+    'SalesOrderItems': {
+        key: function (SalesOrderItem) {
+            return ko.utils.unwrapObservable(SalesOrderItem.SalesOrderItemId);
+        },
+        create: function (options) {
+            return new salesOrderItemViewModel(options.data);
+        }
+    }
+};
+
+salesOrderItemViewModel = function (data) {
     var self = this;
     ko.mapping.fromJS(data, {}, self);
+}
+
+SalesOrderViewModel = function (data) {
+    var self = this;
+    ko.mapping.fromJS(data, salesOrderItemMapping, self);
     self.save = function () {
         var jsParams = ko.toJS(self);
         var securityToken = $('[name=__RequestVerificationToken]').val();

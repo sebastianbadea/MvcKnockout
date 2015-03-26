@@ -185,6 +185,8 @@
     <Content Include="Views\Sales\Details.cshtml" />
     <Content Include="Views\Sales\Index.cshtml" />
     <Content Include="Views\Sales\Display.cshtml" />
+    <Content Include="Views\Sales\OpOrderItems.cshtml" />
+    <Content Include="Views\Sales\DispOrderItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

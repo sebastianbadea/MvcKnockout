@@ -9,5 +9,8 @@
         <label class="control-label">PO number:</label>
         <span class="form-control" data-bind="text: PoNumber"></span>
     </div>
+    @Html.Partial("DispOrderItems")
 </div>
+
+
 @Html.Hidden("urlSavePost", Url.Action("Save"))

@@ -41,7 +41,7 @@ namespace MvcKo.Web.Controllers
                 return HttpNotFound();
             }
 
-            var salesOrderViewModel = Helpers.SetViewModel(salesOrder);
+            var salesOrderViewModel = Helpers.SetOrderViewModel(salesOrder);
             ViewBag.Title = "Sales order details";
 
             return View(salesOrderViewModel);
@@ -66,7 +66,7 @@ namespace MvcKo.Web.Controllers
                 return HttpNotFound();
             }
             var salesOrderViewModel =
-                Helpers.SetViewModel
+                Helpers.SetOrderViewModel
                 (
                     salesOrder,
                     string.Format("The original value of the customer name is {0}.", salesOrder.CustomerName)
@@ -86,7 +86,7 @@ namespace MvcKo.Web.Controllers
             {
                 return HttpNotFound();
             }
-            var salesOrderViewModel = Helpers.SetViewModel(salesOrder);
+            var salesOrderViewModel = Helpers.SetOrderViewModel(salesOrder);
             salesOrderViewModel.State = ObjectState.Deleted;
             
             ViewBag.Title = "Delete sales order";
@@ -100,7 +100,7 @@ namespace MvcKo.Web.Controllers
         {
             try
             {
-                var sales = Helpers.SetModel(salesVM);
+                var sales = Helpers.SetOrderModel(salesVM);
 
                 _db.SalesOrders.Attach(sales);
                 _db.ApplyStateChanges();
