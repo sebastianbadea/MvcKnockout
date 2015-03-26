@@ -47,7 +47,7 @@ SalesOrderViewModel = function (data) {
                         key: "__RequestVerificationToken",
                         value: encodeURIComponent(securityToken)
                     }],
-                toBeRemoved: ["save", "setParameters", "addItem", "flafAsEdited", "__ko_mapping__"]
+                toBeRemoved: ["save", "setParameters", "addItem", "flafAsEdited", "__ko_mapping__", "DeleteOrderItem"]
             });
         $.ajax({
             url: $("#urlSavePost").val(),
@@ -91,6 +91,12 @@ SalesOrderViewModel = function (data) {
 
         return total.toFixed(2);
     });
+    self.DeleteOrderItem = function (item) {
+        self.SalesOrderItems.remove(item);
+        if (item.SalesOrderItemId() > 0 && self.SalesOrderItemsToDelete().indexOf(item.SalesOrderItemId()) == -1) {
+            self.SalesOrderItemsToDelete().push(item.SalesOrderItemId());
+        }
+    };
 
     //#region private functions
     self.setParameters = function (opt) {

@@ -15,7 +15,7 @@
             <td class="form-group"><input class="form-control input-sm text-right" data-bind="value: Quantity, event: {change: flafAsEdited}" /></td>
             <td class="form-group"><input class="form-control input-sm text-right" data-bind="value: UnitPrice, event: {change: flafAsEdited}" /></td>
             <td class="form-group"><span class="form-control text-right" data-bind="text: TotalPrice"></span></td>
-            <td class="form-group">Delete</td>
+            <td class="form-group"><button class="btn btn-danger" data-bind="click: $parent.DeleteOrderItem">Delete</button></td>
         </tr>
     </tbody>
     <tr>

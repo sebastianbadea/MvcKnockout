@@ -103,6 +103,9 @@ namespace MvcKo.Web.Controllers
                 var sales = Helpers.SetOrderModel(salesVM);
 
                 _db.SalesOrders.Attach(sales);
+
+                DeleteItems(salesVM);
+
                 _db.ApplyStateChanges();
                 _db.SaveChanges();
 
@@ -123,6 +126,8 @@ namespace MvcKo.Web.Controllers
             }
             return Json(new { salesVM }, JsonRequestBehavior.AllowGet);
         }
+
+
         #endregion
 
         #region overriden methods
@@ -137,7 +142,17 @@ namespace MvcKo.Web.Controllers
         #endregion
 
         #region private methods
-        
+        /// <summary>
+        /// This method takes the id's set on the client and for each set state to deleted
+        /// </summary>
+        private void DeleteItems(SalesOrderViewModel salesVM)
+        {
+            foreach (var itemToDelete in salesVM.SalesOrderItemsToDelete)
+            {
+                var item = _db.SalesOrderItems.Find(itemToDelete);
+                item.State = ObjectState.Deleted;
+            }
+        }
         #endregion
     }
 }

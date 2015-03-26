@@ -7,6 +7,7 @@ namespace MvcKo.Web.ViewModels
         public SalesOrderViewModel()
         {
             SalesOrderItems = new List<SalesOrderItemViewModel>();
+            SalesOrderItemsToDelete = new List<int>();
         }
 
         public int SalesOrderId { get; set; }
@@ -14,5 +15,6 @@ namespace MvcKo.Web.ViewModels
         public string PoNumber { get; set; }
         public string MessageToClient { get; set; }
         public List<SalesOrderItemViewModel> SalesOrderItems { get; set; }
+        public List<int> SalesOrderItemsToDelete { get; set; }
     }
 }
