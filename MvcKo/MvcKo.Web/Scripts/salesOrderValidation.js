@@ -7,7 +7,7 @@ $("form").validate({
     },
     rules: {
         CustomerName: {
-            //required: true,
+            required: true,
             maxlength: 30
         },
         PoNumber: {
@@ -49,9 +49,11 @@ $("form").validate({
         }
     },
     showErrors: function (errorMap, errorList) {
+        //add the error class on the parent div
         $.each(errorList, function (index, value) {
             $(value.element).parent().addClass("has-error");
         });
+        //so that will call the base functionality
         this.defaultShowErrors();
     }
 });
