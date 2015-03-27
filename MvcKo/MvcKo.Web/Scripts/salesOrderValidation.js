@@ -20,7 +20,7 @@ $("form").validate({
         },
         Quantity: {
             required: true,
-            digits: true,
+            number: true,
             range: [1, 100]
         },
         UnitPrice: {
@@ -38,7 +38,21 @@ $("form").validate({
         //you can specify messages only for certain rules and the others will have the default message
         ProductCode: {
             alphaonly: "The product code can have only letters."
+        },
+        Quantity: {
+            required: "The quantity is required",
+            range: "[1, 100]"
+        },
+        UnitPrice: {
+            required: "The quantity is required",
+            range: "[1, 100000]"
         }
+    },
+    showErrors: function (errorMap, errorList) {
+        $.each(errorList, function (index, value) {
+            $(value.element).parent().addClass("has-error");
+        });
+        this.defaultShowErrors();
     }
 });
 //you can add custom validations

@@ -245,7 +245,7 @@ $.extend( $.validator, {
 		messages: {},
 		groups: {},
 		rules: {},
-		errorClass: "error",
+		errorClass: "danger",
 		validClass: "valid",
 		errorElement: "label",
 		focusCleanup: false,
@@ -574,7 +574,10 @@ $.extend( $.validator, {
 		},
 
 		errors: function() {
-			var errorClass = this.settings.errorClass.split( " " ).join( "." );
+			//var errorClass = this.settings.errorClass.split( " " ).join( "." );
+			//return $(this.settings.errorElement + "." + errorClass, this.errorContext);
+
+			var errorClass = this.settings.errorClass.replace(' ', '.');
 			return $( this.settings.errorElement + "." + errorClass, this.errorContext );
 		},
 
@@ -769,14 +772,14 @@ $.extend( $.validator, {
 				describedBy = $( element ).attr( "aria-describedby" );
 			if ( error.length ) {
 				// refresh error/success class
-				error.removeClass( this.settings.validClass ).addClass( this.settings.errorClass );
+			    error.removeClass(this.settings.validClass).addClass(this.settings.errorClass).addClass("help-block");
 				// replace message on existing label
 				error.html( message );
 			} else {
 				// create error element
 				error = $( "<" + this.settings.errorElement + ">" )
 					.attr( "id", elementID + "-error" )
-					.addClass( this.settings.errorClass )
+					.addClass(this.settings.errorClass).addClass("help-block")
 					.html( message || "" );
 
 				// Maintain reference to the element to be placed into the DOM

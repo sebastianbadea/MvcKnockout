@@ -74,7 +74,7 @@ SalesOrderViewModel = function (data) {
                     SalesOrderId: self.SalesOrderId(),
                     SalesOrderItemId: 0,
                     ProductCode: "",
-                    Quantity: "1",
+                    Quantity: 1,
                     UnitPrice: 0,
                     State: State.Added
                 });
