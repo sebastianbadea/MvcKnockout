@@ -130,6 +130,7 @@
     <Compile Include="ViewModels\ViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="changeJqueryValidate.txt" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -184,6 +185,9 @@
     <Content Include="Views\Sales\Display.cshtml" />
     <Content Include="Views\Sales\OpOrderItems.cshtml" />
     <Content Include="Views\Sales\DispOrderItems.cshtml" />
+    <Content Include="Scripts\jquery.validate.min.js.map">
+      <DependentUpon>jquery.validate.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

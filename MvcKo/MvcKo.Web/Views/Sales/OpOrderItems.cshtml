@@ -11,9 +11,9 @@
     </thead>
     <tbody data-bind="foreach: SalesOrderItems">
         <tr>
-            <td class="form-group"><input class="form-control input-sm" data-bind="value: ProductCode, event: {change: flagAsEdited}, hasFocus: true" /></td>
-            <td class="form-group"><input class="form-control input-sm text-right" data-bind="value: Quantity, event: {change: flagAsEdited}" /></td>
-            <td class="form-group"><input class="form-control input-sm text-right" data-bind="value: UnitPrice, event: {change: flagAsEdited}" /></td>
+            <td class="form-group"><input name="ProductCode" class="form-control input-sm" data-bind="attr: {'id': 'ProductCode_' + $index()}, value: ProductCode, event: {change: flagAsEdited}, hasFocus: true" /></td>
+            <td class="form-group"><input name="Quantity" class="form-control input-sm text-right" data-bind="attr: {'id': 'Quantity_' + $index()}, value: Quantity, event: {change: flagAsEdited}" /></td>
+            <td class="form-group"><input name="UnitPrice" class="form-control input-sm text-right" data-bind="attr: {'id': 'UnitPrice_' + $index()}, value: UnitPrice, event: {change: flagAsEdited}" /></td>
             <td class="form-group"><span class="form-control text-right" data-bind="text: TotalPrice"></span></td>
             <td class="form-group"><button class="btn btn-danger" data-bind="click: $parent.DeleteOrderItem">Delete</button></td>
         </tr>
