@@ -63,6 +63,14 @@ SalesOrderViewModel = function (data) {
                 if (data.salesVM != null) {
                     ko.mapping.fromJS(data.salesVM, {}, self);
                 }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (XMLHttpRequest.status == 400) {
+                    $("#messageToClient").text(XMLHttpRequest.responseText);
+                }
+                else {
+                    $("#messageToClient").text("The server had a problem.");
+                }
             }
         });
     },

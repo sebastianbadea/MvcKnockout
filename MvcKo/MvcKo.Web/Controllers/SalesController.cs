@@ -97,8 +97,13 @@ namespace MvcKo.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [HandleModelStateException]
         public JsonResult Save(SalesOrderViewModel salesVM)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ModelStateException(ModelState);
+            }
             try
             {
                 var sales = Helpers.SetOrderModel(salesVM);

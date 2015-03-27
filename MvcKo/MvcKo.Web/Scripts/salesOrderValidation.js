@@ -7,7 +7,7 @@ $("form").validate({
     },
     rules: {
         CustomerName: {
-            required: true,
+            //required: true,
             maxlength: 30
         },
         PoNumber: {
@@ -32,7 +32,7 @@ $("form").validate({
     //if you don't specify the messages, it will display the default one
     messages: {
         CustomerName: {
-            required: "The order must have a customer name.",
+            //required: "The order must have a customer name.",
             maxlength: "The customer name must have between 1-30 characters."
         },
         //you can specify messages only for certain rules and the others will have the default message
@@ -44,7 +44,7 @@ $("form").validate({
             range: "[1, 100]"
         },
         UnitPrice: {
-            required: "The quantity is required",
+            required: "The unit price is required",
             range: "[1, 100000]"
         }
     },
