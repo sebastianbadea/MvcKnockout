@@ -15,6 +15,7 @@ namespace MvcKo.DataLayer
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("AK_SalesOrderItem", 2) { IsUnique = true}));
             Property(soi => soi.Quantity).IsRequired();
             Property(soi => soi.UnitPrice).IsRequired();
+            Property(soi => soi.RowVersion).IsRowVersion();
             Ignore(soi => soi.State);
         }
     }

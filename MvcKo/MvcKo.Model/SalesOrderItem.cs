@@ -9,5 +9,6 @@ namespace MvcKo.Model
         public decimal UnitPrice { get; set; }
         public int SalesOrderId { get; set; }
         public SalesOrder SalesOrder { get; set; }
+        public byte[] RowVersion { get; set; }
     }
 }

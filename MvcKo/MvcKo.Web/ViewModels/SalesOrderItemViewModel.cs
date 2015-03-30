@@ -13,5 +13,6 @@ namespace MvcKo.Web.ViewModels
         [Required(ErrorMessage = "The unit price is required")]
         public decimal UnitPrice { get; set; }
         public int SalesOrderId { get; set; }
+        public byte[] RowVersion { get; set; }
     }
 }
