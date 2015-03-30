@@ -15,7 +15,8 @@ namespace MvcKo.Web.ViewModels
                     CustomerName = orderVM.CustomerName,
                     PoNumber = orderVM.PoNumber,
                     State = orderVM.State,
-                    SalesOrderId = orderVM.SalesOrderId
+                    SalesOrderId = orderVM.SalesOrderId,
+                    RowVersion = orderVM.RowVersion
                 };
 
             var salesOrderItemId = -1;

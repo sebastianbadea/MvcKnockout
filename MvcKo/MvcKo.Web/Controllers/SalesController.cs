@@ -4,6 +4,8 @@ using MvcKo.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
@@ -105,9 +107,11 @@ namespace MvcKo.Web.Controllers
             {
                 throw new ModelStateException(ModelState);
             }
+            var messageToClient = string.Empty;
+            SalesOrder sales = null;
             try
             {
-                var sales = Helpers.SetOrderModel(salesVM);
+                sales = Helpers.SetOrderModel(salesVM);
 
                 _db.SalesOrders.Attach(sales);
 
@@ -128,10 +132,18 @@ namespace MvcKo.Web.Controllers
                     return Json(new { ReturnUrl = Url.Action("Index") }, JsonRequestBehavior.AllowGet);
                 }
 
-                string messageToClient = Helpers.MessageToClient(salesVM);
+                messageToClient = Helpers.MessageToClient(salesVM);
                 salesVM = Helpers.SetOrderViewModel(sales);
-                salesVM.MessageToClient = messageToClient;
-                salesVM.State = ObjectState.Unchanged;
+                
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                messageToClient = "Someone changed the item since you retrieve it.";
+                salesVM.SalesOrderId = sales.SalesOrderId;
+                _db.Dispose();
+                _db = new SalesContext();
+                var dbSales = _db.SalesOrders.Find(salesVM.SalesOrderId);
+                salesVM = Helpers.SetOrderViewModel(dbSales);
             }
             catch (DbEntityValidationException ex)
             {
@@ -141,6 +153,11 @@ namespace MvcKo.Web.Controllers
             catch (Exception ex)
             {
                 throw new ModelStateException(ex);
+            }
+            finally
+            {
+                salesVM.MessageToClient = messageToClient;
+                salesVM.State = ObjectState.Unchanged;
             }
             return Json(new { salesVM }, JsonRequestBehavior.AllowGet);
         }
