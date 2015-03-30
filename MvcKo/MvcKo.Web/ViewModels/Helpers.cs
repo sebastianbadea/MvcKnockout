@@ -15,7 +15,8 @@ namespace MvcKo.Web.ViewModels
                     CustomerName = orderVM.CustomerName,
                     PoNumber = orderVM.PoNumber,
                     State = orderVM.State,
-                    SalesOrderId = orderVM.SalesOrderId
+                    SalesOrderId = orderVM.SalesOrderId,
+                    RowVersion = orderVM.RowVersion
                 };
 
             var salesOrderItemId = -1;
@@ -38,7 +39,8 @@ namespace MvcKo.Web.ViewModels
                     SalesOrderId = order.SalesOrderId,
                     CustomerName = order.CustomerName,
                     PoNumber = order.PoNumber,
-                    MessageToClient = messageToClient
+                    MessageToClient = messageToClient,
+                    RowVersion = order.RowVersion
                 };
 
             foreach (var item in order.SalesOrderItems)
@@ -97,6 +99,7 @@ namespace MvcKo.Web.ViewModels
         }
         #endregion
 
+        #region utilities
         public static string ExtractErrors(DbEntityValidationException ex)
         {
             var sb = new StringBuilder();
@@ -132,5 +135,6 @@ namespace MvcKo.Web.ViewModels
 
             return message;
         }
+        #endregion
     }
 }

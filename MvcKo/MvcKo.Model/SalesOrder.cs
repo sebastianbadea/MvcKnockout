@@ -13,5 +13,6 @@ namespace MvcKo.Model
         public string CustomerName { get; set; }
         public string PoNumber { get; set; }
         public virtual List<SalesOrderItem> SalesOrderItems { get; set; }
+        public byte[] RowVersion { get; set; }
     }
 }

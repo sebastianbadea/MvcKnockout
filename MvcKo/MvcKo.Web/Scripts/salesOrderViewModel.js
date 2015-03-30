@@ -17,6 +17,13 @@ salesOrderItemMapping = {
     }
 };
 
+var dataConverter = function (key, value) {
+    if (key === "RowVersion" && Array.isArray(value)) {
+        var str = String.fromCharCode.apply(null, value);
+        return btoa(str);
+    }
+    return value;
+}
 
 var salesOrderItemViewModel = function (data) {
     var self = this;
@@ -45,7 +52,7 @@ SalesOrderViewModel = function (data) {
             this.setParameters
             ({
                 params: jsParams,
-                toBeAdded:
+                toBeAdded: 
                     [{
                         key: "__RequestVerificationToken",
                         value: encodeURIComponent(securityToken)
@@ -111,12 +118,20 @@ SalesOrderViewModel = function (data) {
 
     //#region private functions
     self.setParameters = function (opt) {
+        //add
         for (var i = 0; i < opt.toBeAdded.length; i++) {
             opt.params[opt.toBeAdded[i].key] = opt.toBeAdded[i].value;
         }
-
+        //remove
         for (var i = 0; i < opt.toBeRemoved.length; i++) {
             delete opt.params[opt.toBeRemoved[i]];
+        }
+        //convert 
+        for (var key in opt.params) {
+            if (opt.params.hasOwnProperty(key)) {
+                var obj = opt.params[key];
+                opt.params[key] = dataConverter(key, opt.params[key]);
+            }
         }
 
         return opt.params;

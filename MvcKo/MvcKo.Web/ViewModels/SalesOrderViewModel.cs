@@ -20,5 +20,6 @@ namespace MvcKo.Web.ViewModels
         public string MessageToClient { get; set; }
         public List<SalesOrderItemViewModel> SalesOrderItems { get; set; }
         public List<int> SalesOrderItemsToDelete { get; set; }
+        public byte[] RowVersion { get; set; }
     }
 }
