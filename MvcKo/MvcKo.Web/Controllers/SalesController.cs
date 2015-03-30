@@ -1,6 +1,7 @@
 ﻿using MvcKo.DataLayer;
 using MvcKo.Model;
 using MvcKo.Web.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
@@ -124,7 +125,7 @@ namespace MvcKo.Web.Controllers
 
                 if (salesVM.State == ObjectState.Deleted)
                 {
-                    return Json(new { ReturnUrl = Url.Action("Index")}, JsonRequestBehavior.AllowGet);
+                    return Json(new { ReturnUrl = Url.Action("Index") }, JsonRequestBehavior.AllowGet);
                 }
 
                 string messageToClient = Helpers.MessageToClient(salesVM);
@@ -136,6 +137,10 @@ namespace MvcKo.Web.Controllers
             {
                 var errors = Helpers.ExtractErrors(ex);
                 salesVM.MessageToClient = string.Format("the saving failed with the following errors: {0}", errors);
+            }
+            catch (Exception ex)
+            {
+                throw new ModelStateException(ex);
             }
             return Json(new { salesVM }, JsonRequestBehavior.AllowGet);
         }

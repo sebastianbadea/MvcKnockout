@@ -8,20 +8,6 @@ namespace MvcKo.Web.ViewModels
 {
     public class ModelStateException: Exception
     {
-        public Dictionary<string, string> Errors { get; set; }
-
-        public override string Message
-        {
-            get
-            {
-                if (Errors.Count > 0)
-                {
-                    return string.Join("|", Errors.ToArray());
-                }
-                return null;
-            }
-        }
-
         public ModelStateException(ModelStateDictionary modelState)
         {
             if (modelState == null)
@@ -45,6 +31,29 @@ namespace MvcKo.Web.ViewModels
                         Errors.Add(state.Key, errors.ToString());
                     }
                 }
+            }
+        }
+
+        public ModelStateException(Exception e)
+        {
+            var message =
+                (e.InnerException != null && e.InnerException.InnerException != null) ?
+                e.InnerException.InnerException.Message :
+                e.Message;
+            Errors = new Dictionary<string, string>();
+            Errors.Add(string.Empty, message);
+        }
+        public Dictionary<string, string> Errors { get; set; }
+
+        public override string Message
+        {
+            get
+            {
+                if (Errors.Count > 0)
+                {
+                    return string.Join("|", Errors.ToArray());
+                }
+                return null;
             }
         }
     }
